@@ -1,0 +1,38 @@
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION ON A 2-D MESH - naive gather
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Mesh                 =    1 x    1
+ Processes P          =    1
+ Trapezoids N         = 28800
+ Points per process   = 28800
+ Summation            =    0 receives at processor 0
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   1267484.00
+ Sequential execution time T(1) =   1238584.00
+ Speedup   T(1)/T(P)            =  0.9772
+ Efficiency  speedup/P          =  0.9772
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1267530
+PARALLEL EXECUTION TIME: 1267542
+SPEEDUP:    1.00
+NUMBER OF PROCESSORS USED: 1
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+
+*TERMINATE C* SYSTEM
+

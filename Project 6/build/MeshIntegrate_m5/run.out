@@ -1,0 +1,63 @@
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION ON A 2-D MESH - mesh summation
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Mesh                 =    5 x    5
+ Processes P          =   25
+ Trapezoids N         = 28800
+ Points per process   = 1152
+ Summation steps      =    4  (row M/2 + column M/2, 1 hop each)
+ Result collected at  = processor   12 (row    2, col    2)
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   51543.0000
+ Sequential execution time T(1) =   1238584.00
+ Speedup   T(1)/T(P)            =   24.02
+ Efficiency  speedup/P          =  0.9605
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1271533
+PARALLEL EXECUTION TIME: 51640
+SPEEDUP:   24.62
+NUMBER OF PROCESSORS USED: 25
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+     1           98               98
+     2           98               98
+     3           98               98
+     4           98               98
+     5           98               98
+     6           98               98
+     7           98               98
+     8           98               98
+     9           98               98
+    10           98               98
+    11           98               98
+    12           99               99
+    13           98               98
+    14           98               98
+    15           98               98
+    16           98               98
+    17           98               98
+    18           98               98
+    19           98               98
+    20           98               98
+    21           98               98
+    22           98               98
+    23           98               98
+    24           98               98
+
+*TERMINATE C* SYSTEM
+

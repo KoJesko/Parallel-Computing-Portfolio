@@ -1,0 +1,56 @@
+### Sample run: MeshIntegrateNaive.c (C* simulator, 4 x 4 mesh, gather at 0)
+### command: ./runcstar.sh MeshIntegrateNaive.c UTILIZATION 0:15
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION ON A 2-D MESH - naive gather
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Mesh                 =    4 x    4
+ Processes P          =   16
+ Trapezoids N         = 28800
+ Points per process   = 1800
+ Summation            =   15 receives at processor 0
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   80106.0000
+ Sequential execution time T(1) =   1238584.00
+ Speedup   T(1)/T(P)            =   15.46
+ Efficiency  speedup/P          =  0.9659
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1269270
+PARALLEL EXECUTION TIME: 80163
+SPEEDUP:   15.83
+NUMBER OF PROCESSORS USED: 16
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+     1           98               98
+     2           98               98
+     3           98               98
+     4           98               98
+     5           98               98
+     6           98               98
+     7           98               98
+     8           98               98
+     9           98               98
+    10           98               98
+    11           98               98
+    12           98               98
+    13           98               98
+    14           98               98
+    15           98               98
+
+*TERMINATE C* SYSTEM
+

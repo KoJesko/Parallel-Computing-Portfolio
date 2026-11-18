@@ -1,0 +1,101 @@
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION ON A 2-D MESH - naive gather
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Mesh                 =    8 x    8
+ Processes P          =   64
+ Trapezoids N         = 28800
+ Points per process   =  450
+ Summation            =   63 receives at processor 0
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   22676.0000
+ Sequential execution time T(1) =   1238584.00
+ Speedup   T(1)/T(P)            =   54.56
+ Efficiency  speedup/P          =  0.8521
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1274838
+PARALLEL EXECUTION TIME: 22733
+SPEEDUP:   56.08
+NUMBER OF PROCESSORS USED: 64
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+     1           87               87
+     2           87               87
+     3           87               87
+     4           87               87
+     5           87               87
+     6           87               87
+     7           87               87
+     8           87               87
+     9           87               87
+    10           87               87
+    11           87               87
+    12           87               87
+    13           87               87
+    14           87               87
+    15           87               87
+    16           87               87
+    17           87               87
+    18           87               87
+    19           87               87
+    20           87               87
+    21           87               87
+    22           87               87
+    23           87               87
+    24           87               87
+    25           87               87
+    26           87               87
+    27           87               87
+    28           87               87
+    29           87               87
+    30           87               87
+    31           87               87
+    32           87               87
+    33           87               87
+    34           87               87
+    35           87               87
+    36           87               87
+    37           87               87
+    38           87               87
+    39           87               87
+    40           87               87
+    41           87               87
+    42           87               87
+    43           87               87
+    44           87               87
+    45           87               87
+    46           87               87
+    47           87               87
+    48           87               87
+    49           87               87
+    50           87               87
+    51           87               87
+    52           87               87
+    53           87               87
+    54           87               87
+    55           87               87
+    56           87               87
+    57           87               87
+    58           87               87
+    59           87               87
+    60           87               87
+    61           87               87
+    62           87               87
+    63           87               87
+
+*TERMINATE C* SYSTEM
+

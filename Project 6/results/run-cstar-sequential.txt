@@ -1,0 +1,29 @@
+### Sample run: IntegrateSequential.c (C* simulator, 1 processor)
+### command: ./runcstar.sh IntegrateSequential.c
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION - sequential reference
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Trapezoids N         = 28800
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+ Sequential execution time T(1) =   1238574.00
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1238584
+PARALLEL EXECUTION TIME: 1238584
+SPEEDUP:    1.00
+NUMBER OF PROCESSORS USED: 1
+
+*TERMINATE C* SYSTEM
+

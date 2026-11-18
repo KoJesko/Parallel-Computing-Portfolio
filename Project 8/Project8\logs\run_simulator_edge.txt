@@ -1,0 +1,64 @@
+==================================================================
+ Project 8 - Spatial filtering on a 7-dimensional hypercube
+ C* simulator (Bruce P. Lester), MPI mode, ARCHITECTURE HYPERCUBE(7)
+ Note: run on my gaming desktop (AMD Ryzen 7 9700X 8-core,
+       NVIDIA GeForce RTX 5070 Ti, Windows 11 Home)
+==================================================================
+
+---------- PARALLEL: SpatialFilterHypercube.c, input image256_edge.txt
+                          C* COMPILER AND
+                 PARALLEL COMPUTER SIMULATION SYSTEM 
+                             (VER. 2.2)
+     (C) Copyright 2007 by Bruce P. Lester, All Rights Reserved
+  Basic Commands:
+    *OPEN filename - Open and Compile your program source file
+    *RUN - Initialize and run your program from the beginning
+    *CLOSE - Close your program source file to allow editing
+    *EXIT - Terminate this C* System
+    *HELP - Show a complete list of commands
+Program Successfully Compiled
+To View a Complete Program Listing, See File LISTFILE.TXT
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+     1            2                2
+     2            2                2
+     3            2                2
+     4            2                2
+     5            2                2
+     6            2                2
+     7            2                2
+*TERMINATE C* SYSTEM
+Runtime error 103 at $00424057
+  $00424057
+
+---------- program performance summary (written by node 0 to out_edge.pgm)
+# ---- Program performance summary (simulated time units) ----
+# image  256 x  256,  128 processors (7-D hypercube),    2 rows per processor
+# header broadcast  :  1.184000000000E+003
+# strip distribution:  1.183056000000E+006
+# halo exchange     :  7.968000000000E+003
+# filtering (+reduce):  1.153530000000E+005
+# collect + output  :  2.648813000000E+006
+# total             :  3.956374000000E+006
+# filter work, all nodes (sequential equivalent):  1.425050400000E+007
+# filter work, slowest node                     :  1.117050000000E+005
+# filter-phase speedup  :  1.275726601316E+002
+# filter-phase efficiency:  9.966614072781E-001
+
+---------- simulator summary for the parallel run
+SEQUENTIAL EXECUTION TIME: 18628074
+PARALLEL EXECUTION TIME: 3956559
+SPEEDUP:    4.71
+NUMBER OF PROCESSORS USED: 128
+
+---------- SEQUENTIAL: SpatialFilterSequential.c, same input, 1 processor
+SEQUENTIAL EXECUTION TIME: 18028266
+PARALLEL EXECUTION TIME: 18028266
+SPEEDUP:    1.00
+NUMBER OF PROCESSORS USED: 1
+
+---------- correctness check against an independent sequential filter
+out_edge.pgm: 0 of 65536 pixels differ from sequential reference -> PASS
+out_seq_edge.pgm: 0 of 65536 pixels differ from sequential reference -> PASS
+(input and filtered images written to images\ as .bmp)

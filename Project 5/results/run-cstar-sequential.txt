@@ -1,0 +1,46 @@
+### Sample run: JacobiSequential.c  (C* simulator, 1 processor)
+### command: ./runcstar.sh JacobiSequential.c
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=====================================================
+ SEQUENTIAL JACOBI RELAXATION  (reference version)
+=====================================================
+ Processes P        =    1
+ Grid (interior)    =   32 x   32
+ Tolerance          =  0.010000
+
+ CONVERGED
+ Sweeps to converge =  642
+ Final max change   =  0.009992
+ Solution checksum  =   24632.0
+ Centre value       =   24.0693   (exact steady state = 25)
+   N is small enough here that the run really does reach the
+   physical answer, so this doubles as a validation.
+
+ Temperature field (every    4th row and column):
+  100.0   100.0   100.0   100.0   100.0   100.0   100.0   100.0   100.0 
+ 0.0000   48.08   66.48   73.25   75.25   74.08   68.84   54.58   15.37 
+ 0.0000   25.93   42.54   50.84   53.62   51.98   45.26   31.03   7.051 
+ 0.0000   15.47   27.18   34.07   36.59   35.09   29.35   18.83   4.049 
+ 0.0000   9.540   17.26   22.18   24.07   22.94   18.77   11.70   2.465 
+ 0.0000   5.839   10.70   13.92   15.19   14.43   11.68   7.179   1.501 
+ 0.0000   3.393   6.255   8.186   8.958   8.493   6.837   4.177  0.8700 
+ 0.0000   1.672   3.091   4.057   4.445   4.211   3.381   2.060  0.4283 
+ 0.0000  0.3169  0.5864  0.7702  0.8444  0.7997  0.6416  0.3904  0.0811 
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Execution time on 1 processor  T(1) =   75050127.0
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 75050137
+PARALLEL EXECUTION TIME: 75050137
+SPEEDUP:    1.00
+NUMBER OF PROCESSORS USED: 1
+
+*TERMINATE C* SYSTEM
+
