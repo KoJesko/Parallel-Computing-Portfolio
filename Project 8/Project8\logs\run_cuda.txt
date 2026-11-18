@@ -1,0 +1,59 @@
+==================================================================
+ Project 8 - Spatial filtering on the GPU (CUDA)
+ Note: run on my gaming desktop (AMD Ryzen 7 9700X 8-core,
+       NVIDIA GeForce RTX 5070 Ti, Windows 11 Home)
+==================================================================
+
+##### 1) sample input (verified against the sequential filter)
+
+================ SPATIAL FILTER - CUDA GPU ======================
+ input            : image256_edge.txt
+ image            : 256 x 256 pixels, 3x3 mask, 1 pass(es)
+ GPU              : NVIDIA GeForce RTX 5070 Ti (70 SMs, compute 12.0)
+ launch           : grid 8 x 32 blocks of 32 x 8 threads, shared-memory tiles
+-----------------------------------------------------------------
+ host -> device   :     0.013 ms
+ kernel (1 pass) :     0.009 ms  (0.0094 ms per pass)
+ device -> host   :     0.082 ms
+ throughput       :    6966.0 Mpixel/s (118.4 GFLOP/s, 17 ops/pixel)
+ 1-core CPU pass  :     0.533 ms (unoptimised sequential reference)
+ kernel speedup   :      56.6 x  vs that single-core reference
+=================================================================
+ verify vs sequential reference: 0 pixels differ -> PASS
+ result checksum  : 47fe76af1d73ac71
+ wrote images\cuda_out_edge.bmp
+
+##### 2) 8192 x 8192 generated image, 1 pass (verified)
+
+================ SPATIAL FILTER - CUDA GPU ======================
+ input            : smooth (generated)
+ image            : 8192 x 8192 pixels, 3x3 mask, 1 pass(es)
+ GPU              : NVIDIA GeForce RTX 5070 Ti (70 SMs, compute 12.0)
+ launch           : grid 256 x 1024 blocks of 32 x 8 threads, shared-memory tiles
+-----------------------------------------------------------------
+ host -> device   :     3.723 ms
+ kernel (1 pass) :     0.857 ms  (0.8574 ms per pass)
+ device -> host   :     6.278 ms
+ throughput       :   78269.5 Mpixel/s (1330.6 GFLOP/s, 17 ops/pixel)
+ 1-core CPU pass  :   272.373 ms (unoptimised sequential reference)
+ kernel speedup   :     317.7 x  vs that single-core reference
+=================================================================
+ verify vs sequential reference: 0 pixels differ -> PASS
+ result checksum  : 088d50e217dc35f7
+
+##### 3) 8192 x 8192, 100 passes (checksum must equal the MPI 100-pass run)
+
+================ SPATIAL FILTER - CUDA GPU ======================
+ input            : smooth (generated)
+ image            : 8192 x 8192 pixels, 3x3 mask, 100 pass(es)
+ GPU              : NVIDIA GeForce RTX 5070 Ti (70 SMs, compute 12.0)
+ launch           : grid 256 x 1024 blocks of 32 x 8 threads, shared-memory tiles
+-----------------------------------------------------------------
+ host -> device   :     3.316 ms
+ kernel (100 pass) :    87.672 ms  (0.8767 ms per pass)
+ device -> host   :     6.082 ms
+ throughput       :   76545.1 Mpixel/s (1301.3 GFLOP/s, 17 ops/pixel)
+ 1-core CPU pass  :   271.225 ms (unoptimised sequential reference)
+ kernel speedup   :     309.4 x  vs that single-core reference
+=================================================================
+ result checksum  : 456994278fda5a34

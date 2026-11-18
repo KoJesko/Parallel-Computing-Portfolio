@@ -1,0 +1,26 @@
+### Sample runs on real hardware
+
+$ ./cpu_torus            # 4 x 4 torus, 2 threads per node = 32 threads
+CPU torus 4 x 4, 2 threads per node (32 threads, dynamic), N = 4096
+  block    = 1024 x 1024 per node, 3 rotation steps
+  sum(C)   = 24   C[0][0] = 3   C[N-1][N-1] = 31
+  checks   = 8192 of 8192 row/column sums exact
+  time     = 0.231666 s (best of 3)
+  rate     = 593.3 GFLOP/s
+
+$ ./cpu_torus 1 1        # 1 thread, same N, for the speedup
+CPU torus 1 x 1, 1 threads per node (1 threads, dynamic), N = 4096
+  block    = 4096 x 4096 per node, 0 rotation steps
+  sum(C)   = 24   C[0][0] = 3   C[N-1][N-1] = 31
+  checks   = 8192 of 8192 row/column sums exact
+  time     = 1.791256 s (best of 3)
+  rate     = 76.7 GFLOP/s
+
+$ ./cuda_torus           # 64 x 64 torus of thread blocks, N = 8192
+CUDA torus on NVIDIA GeForce RTX 4060 Laptop GPU (24 SMs)
+  N        = 8192, grid = 64 x 64 torus of 256-thread blocks, 128 x 128 tile each
+  K order  = Cannon skew (k = r + c + s mod G)
+  sum(C)   = 17   C[0][0] = 70   C[N-1][N-1] = -7
+  checks   = 16384 of 16384 row/column sums exact
+  time     = 0.134130 s kernel (best of 10)
+  rate     = 8197.3 GFLOP/s   (cuBLAS SGEMM: 7908.9 GFLOP/s, 104%)

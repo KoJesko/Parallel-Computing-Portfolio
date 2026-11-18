@@ -1,0 +1,71 @@
+Project 4 - Parallel Bucket Sort (Programming Project 2, pp. 175-176)
+=====================================================================
+
+Program: ParallelBucketSort.c, run in the C* Compiler and Parallel Computer
+Simulation System v2.2. Sort n = 2000 random integers in the range [0, 999].
+The number of distribution processes equals the number of buckets. Data
+generation, printing and the sortedness check are inside seqoff/seqon, so
+they are excluded from the timings.
+
+Every run below printed "VERIFIED: all 2000 values are in sorted order".
+
+Buckets  Data      Sequential time  Parallel time  Speedup  Processors
+-------  --------  ---------------  -------------  -------  ----------
+      2  uniform        21,424,977     11,375,678     1.88           3
+      5  uniform         8,817,457      2,223,454     3.97           6
+     10  uniform         4,586,594        757,904     6.05          11
+     20  uniform         2,472,316        364,109     6.79          21
+     25  uniform         2,038,764        287,944     7.08          26
+     50  uniform         1,180,881        212,214     5.56          51
+     10  skewed         29,206,124     29,098,834     1.00          11
+     20  skewed         28,201,209     28,153,443     1.00          21
+
+("skewed" = about 80% of the values fall in bucket 0's range.)
+
+How the program works
+---------------------
+1. Distribution phase: forall p = 1 to procs. Each process scans its own
+   slice of n/procs values and drops each value v into bucket v / width.
+   - Exclusion problem: several processes may add to the same bucket at
+     the same time, so each bucket has its own spinlock. A process holds
+     the lock only long enough to claim a slot (index = ++bucket[b][0]).
+     It stores the value after Unlock, because no other process will ever
+     write that slot.
+   - Contention problem: one lock per bucket (instead of one global lock)
+     lets processes working on different buckets proceed in parallel, and
+     the short critical section keeps lock spinning low.
+2. Communication step: bucket b's place in the final array is 1 + the sum
+   of the sizes of buckets 0..b-1. The processes pass a running sum down a
+   chain of streams: process b does recv(start[b], pos) and then
+   send(start[b+1], pos + size). The sizes are known as soon as distribution
+   ends, so this happens BEFORE sorting and never delays the sort.
+3. Sort phase: each process selection-sorts its own bucket (the same
+   sort() as SequentialBucketSort.c).
+4. Append phase: each process copies its sorted bucket into
+   sortedData[pos .. pos+size-1] in parallel with the other buckets.
+
+Observations
+------------
+- With uniform data, speedup rises from 1.88 (2 buckets) to 7.08 (25
+  buckets). Parallel time keeps falling as buckets are added (212,214 at
+  50 buckets is the fastest run), but speedup peaks around 25 buckets. At
+  that point each bucket holds only ~40-80 values, so the fixed costs (the
+  start-position relay grows by one message per bucket, process creation,
+  and lock traffic during distribution) become a larger share of the
+  remaining work.
+- Selection sort is O(k^2) per bucket, so more buckets also cut the total
+  work (the sequential time falls from 21.4M to 1.2M time units).
+- Load imbalance: with skewed data, bucket 0 receives ~1650 of the 2000
+  values. Its O(k^2) sort dominates the run, so every other process sits
+  idle and speedup collapses to 1.00 no matter how many buckets are used.
+  This matches the textbook's warning that performance depends on the
+  evenness of the distribution phase.
+
+Bug noted in the reference SequentialBucketSort.c
+-------------------------------------------------
+Its append loop uses "j < bucket[i][0]", which skips the last value of
+every bucket, so it prints 1990 of the 2000 values. The parallel version
+uses "j <= size".
+
+To reproduce: ./run-bucketsort.sh [buckets] [skewed]
+e.g. ./run-bucketsort.sh 10 0   or   ./run-bucketsort.sh 10 1

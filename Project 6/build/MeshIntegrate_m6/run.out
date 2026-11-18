@@ -1,0 +1,74 @@
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION ON A 2-D MESH - mesh summation
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Mesh                 =    6 x    6
+ Processes P          =   36
+ Trapezoids N         = 28800
+ Points per process   =  800
+ Summation steps      =    6  (row M/2 + column M/2, 1 hop each)
+ Result collected at  = processor   14 (row    2, col    2)
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   36272.0000
+ Sequential execution time T(1) =   1238584.00
+ Speedup   T(1)/T(P)            =   34.12
+ Efficiency  speedup/P          =  0.9476
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1273302
+PARALLEL EXECUTION TIME: 36369
+SPEEDUP:   35.01
+NUMBER OF PROCESSORS USED: 36
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           98               98
+     1           97               97
+     2           97               97
+     3           97               97
+     4           97               97
+     5           97               97
+     6           97               97
+     7           97               97
+     8           97               97
+     9           97               97
+    10           97               97
+    11           97               97
+    12           97               97
+    13           97               97
+    14           98               98
+    15           97               97
+    16           97               97
+    17           97               97
+    18           97               97
+    19           97               97
+    20           97               97
+    21           97               97
+    22           97               97
+    23           97               97
+    24           97               97
+    25           97               97
+    26           97               97
+    27           97               97
+    28           97               97
+    29           97               97
+    30           97               97
+    31           97               97
+    32           97               97
+    33           97               97
+    34           97               97
+    35           97               97
+
+*TERMINATE C* SYSTEM
+

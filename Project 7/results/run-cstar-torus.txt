@@ -1,0 +1,55 @@
+### Sample run: TorusMatMul.c (C* simulator, 4 x 4 torus, Cannon's algorithm)
+### command: taskset -c 0-15 ./runcstar.sh TorusMatMul.c UTILIZATION 0:15
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ MATRIX MULTIPLICATION ON A TORUS - Cannon's algorithm
+=======================================================
+ Matrix size N        =   96 x   96
+ Torus                =    4 x    4  (P =   16 processors)
+ Block per processor  =   24 x   24
+ Rotation steps       =    3  (2 block messages per processor, 1 hop each)
+ Communication        = overlapped with the multiply
+
+ Sum of all C entries = -6.000000000000
+ C[0][0], C[N-1][N-1] =  0.000000000000, -50.000000000000
+ Row/column checks    =  192 of  192 correct
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   2469335.00
+ Sequential execution time T(1) =   36499233.0
+ Speedup   T(1)/T(P)            =   14.78
+ Efficiency  speedup/P          =  0.9238
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 47886817
+PARALLEL EXECUTION TIME: 2994842
+SPEEDUP:   15.99
+NUMBER OF PROCESSORS USED: 16
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+     1           99               99
+     2           99               99
+     3           99               99
+     4           99               99
+     5           99               99
+     6           99               99
+     7           99               99
+     8           99               99
+     9           99               99
+    10           99               99
+    11           99               99
+    12           99               99
+    13           99               99
+    14           99               99
+    15           99               99
+
+*TERMINATE C* SYSTEM
+

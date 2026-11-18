@@ -1,0 +1,54 @@
+### Sample run: NaiveMatMul.c (C* simulator, 4 x 4 torus, host distributes)
+### command: taskset -c 0-15 ./runcstar.sh NaiveMatMul.c UTILIZATION 0:15
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ MATRIX MULTIPLICATION ON A TORUS - naive host version
+=======================================================
+ Matrix size N        =   96 x   96
+ Torus                =    4 x    4  (P =   16 processors)
+ Block per processor  =   24 x   24
+ Processor 0 sends    =   30 strips of   24 x   96, receives   15 blocks
+
+ Sum of all C entries = -6.000000000000
+ C[0][0], C[N-1][N-1] =  0.000000000000, -50.000000000000
+ Row/column checks    =  192 of  192 correct
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   6721223.00
+ Sequential execution time T(1) =   36499233.0
+ Speedup   T(1)/T(P)            =   5.430
+ Efficiency  speedup/P          =  0.3394
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 50393323
+PARALLEL EXECUTION TIME: 8337246
+SPEEDUP:    6.04
+NUMBER OF PROCESSORS USED: 16
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0          100              100
+     1           33               33
+     2           33               33
+     3           33               33
+     4           33               33
+     5           33               33
+     6           33               33
+     7           33               33
+     8           33               33
+     9           33               33
+    10           33               33
+    11           33               33
+    12           33               33
+    13           33               33
+    14           33               33
+    15           33               33
+
+*TERMINATE C* SYSTEM
+

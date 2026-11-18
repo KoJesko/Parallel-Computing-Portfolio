@@ -1,0 +1,86 @@
+    1 /* PROGRAM MeshIntegrateNaive                                              */
+    2 /*                                                                          */
+    3 /*  Project 6 - control version for comparison with MeshIntegrate.c.        */
+    4 /*                                                                          */
+    5 /*  The direct message-passing translation of Figure 5.8: the shared        */
+    6 /*  "globalsum += localsum" inside a lock becomes "every process sends its  */
+    7 /*  local sum to processor 0".  Processor 0 must perform P - 1 receives one */
+    8 /*  after another, and messages from the far corner cross 2(M - 1) links.   */
+    9 /*  The local computation is identical to MeshIntegrate.c.                  */
+   10 
+   11 ARCHITECTURE MESH2(2);
+   12 
+   13 #include <math.h>
+   14 
+   15 #define M        2          /* mesh is M x M; must match MESH2(M) above    */
+   16 #define P        4          /* number of processes = M * M                 */
+   17 #define N        28800      /* total number of trapezoids (all processes)  */
+   18 #define SEQTIMEK 1238.584   /* T(1) / 1000 from IntegrateSequential.c     */
+   19 
+   20 float stream tozero;        /* every local sum is sent here                */
+   21 int i;
+   22 
+   23 float f(float t) {
+   24   return( sqrt(4 - t*t) );
+   25 }
+   26 
+   27 void Integrate(int me) {
+   28   float a, b, w, t, localsum, total, inval, err;
+   29   int numpoints, j, k;
+   30 
+   31   a = 0.0;
+   32   b = 2.0;
+   33   w = (b - a) / N;
+   34   numpoints = N / P;
+   35 
+   36   localsum = 0.0;
+   37   t = a + me * numpoints * w;
+   38   for (j = 1; j <= numpoints; j++) {
+   39     localsum = localsum + f(t);
+   40     t = t + w;
+   41   }
+   42   localsum = w * localsum;
+   43 
+   44   if (me > 0)
+   45     send(tozero, localsum);
+   46   else {
+   47     total = localsum;
+   48     for (k = 1; k <= P - 1; k++) {
+   49       recv(tozero, inval);
+   50       total = total + inval;
+   51     }
+   52     total = total + w / 2 * (f(b) - f(a));
+   53 
+   54     err = total - 3.14159265358979;
+   55     if (err < 0) err = -err;
+   56     cout << "=======================================================" << endl;
+   57     cout << " NUMERICAL INTEGRATION ON A 2-D MESH - naive gather" << endl;
+   58     cout << "=======================================================" << endl;
+   59     cout << " f(t) = sqrt(4 - t*t),  a = 0,  b = 2" << endl;
+   60     cout << " Mesh                 = " << M << " x " << M << endl;
+   61     cout << " Processes P          = " << P << endl;
+   62     cout << " Trapezoids N         = " << N << endl;
+   63     cout << " Points per process   = " << numpoints << endl;
+   64     cout << " Summation            = " << P - 1
+   65          << " receives at processor 0" << endl;
+   66     cout.precision(12);
+   67     cout << endl << " Integral             = " << total << endl;
+   68     cout << " pi                   = " << 3.14159265358979 << endl;
+   69     cout << " Absolute error       = " << err << endl;
+   70     cout << endl << "----------------- PERFORMANCE SUMMARY -----------------" << endl;
+   71     cout.precision(9);
+   72     cout << " Parallel execution time   T(P) = " << clock << endl;
+   73     if (SEQTIMEK > 0) {
+   74       cout << " Sequential execution time T(1) = " << SEQTIMEK * 1000 << endl;
+   75       cout.precision(4);
+   76       cout << " Speedup   T(1)/T(P)            = " << SEQTIMEK * 1000 / clock << endl;
+   77       cout << " Efficiency  speedup/P          = " << SEQTIMEK * 1000 / clock / P << endl;
+   78     }
+   79     cout << "=======================================================" << endl;
+   80   }
+   81 }
+   82 
+   83 main() {
+   84   forall i = 0 to P-1 @ i do
+   85     Integrate(i);
+   86 }

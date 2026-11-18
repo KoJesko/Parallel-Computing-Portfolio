@@ -1,0 +1,36 @@
+
+                          C* COMPILER AND
+                 PARALLEL COMPUTER SIMULATION SYSTEM 
+                             (VER. 2.2)
+
+     (C) Copyright 2007 by Bruce P. Lester, All Rights Reserved
+
+
+  Basic Commands:
+    *OPEN filename - Open and Compile your program source file
+    *RUN - Initialize and run your program from the beginning
+    *CLOSE - Close your program source file to allow editing
+    *EXIT - Terminate this C* System
+    *HELP - Show a complete list of commands
+
+
+*
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*Enter n (2..32000): 
+n = 10000 (sequential)
+Number of primes from 1 to 10000: 1229
+Sieve + count time (sequential):   771965.00
+
+
+SEQUENTIAL EXECUTION TIME: 772027
+PARALLEL EXECUTION TIME: 772027
+SPEEDUP:    1.00
+NUMBER OF PROCESSORS USED: 1
+
+*
+*TERMINATE C* SYSTEM
+

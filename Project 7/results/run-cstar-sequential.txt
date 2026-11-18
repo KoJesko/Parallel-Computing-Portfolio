@@ -1,0 +1,29 @@
+### Sample run: MatMulSequential.c (C* simulator, 1 processor)
+### command: taskset -c 0-15 ./runcstar.sh MatMulSequential.c
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ MATRIX MULTIPLICATION C = A x B - sequential
+=======================================================
+ Matrix size N        =   96 x   96
+ Multiply-adds        = N^3
+ Sum of all C entries = -6.000000000000
+ C[0][0], C[N-1][N-1] =  0.000000000000, -50.000000000000
+ Row/column checks    =  192 of  192 correct
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Sequential execution time T(1) =   36499233.0
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 38115155
+PARALLEL EXECUTION TIME: 38115155
+SPEEDUP:    1.00
+NUMBER OF PROCESSORS USED: 1
+
+*TERMINATE C* SYSTEM
+

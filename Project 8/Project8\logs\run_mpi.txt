@@ -1,0 +1,98 @@
+==================================================================
+ Project 8 - Spatial filtering, real MPI on the CPU (MS-MPI)
+ Note: run on my gaming desktop (AMD Ryzen 7 9700X 8-core,
+       NVIDIA GeForce RTX 5070 Ti, Windows 11 Home)
+==================================================================
+
+##### sample input image256_smooth.txt, 128 ranks = 7-dimensional hypercube
+
+================ SPATIAL FILTER - MPI HYPERCUBE ================
+ input            : image256_smooth.txt
+ image            : 256 x 256 pixels, 3x3 mask, 1 pass(es)
+ MPI ranks        : 128  = 7-dimensional hypercube (Gray-code strips)
+ logical CPUs     : 8
+----------------------------------------------------------------
+ read/generate    :    0.0070 s  (rank 0, sequential I/O)
+ bcast + scatter  :    0.0006 s  (7 hypercube steps)
+ filter passes    :    0.0098 s  (compute 0.0001 s, halo 0.0021 s max/rank)
+ gather           :    0.1095 s  (7 hypercube steps)
+ parallel total   :    0.1199 s
+ throughput       :       6.7 Mpixel/s (0.11 GFLOP/s, 17 ops/pixel)
+ load balance     :       2.4 %  (avg / max compute time per rank)
+----------------------------------------------------------------
+ CPU USAGE        :    n/a    filter phase too short to measure (use -gen
+                              8192 8192 smooth 100 for a CPU-usage run)
+                    (sum of CPU time of all 128 ranks / wall-clock time,
+                     8 cores x 100% = 800% maximum)
+================================================================
+ verify vs sequential reference: 0 pixels differ -> PASS
+ (unoptimised sequential reference took 0.0003 s)
+ result checksum  : 81d931867aa78856
+ wrote images\mpi_out_smooth.bmp
+
+##### sample input image256_edge.txt, 8 ranks = 3-dimensional hypercube
+ MPI ranks        : 8  = 3-dimensional hypercube (Gray-code strips)
+ verify vs sequential reference: 0 pixels differ -> PASS
+ result checksum  : 47fe76af1d73ac71
+ wrote images\mpi_out_edge.bmp
+
+##### scaling: 8192 x 8192 image, 100 passes, 1/2/4/8 ranks (one rank per core)
+
+---------- 1 rank(s)
+ MPI ranks        : 1  = 0-dimensional hypercube (Gray-code strips)
+ filter passes    :   12.3796 s  (compute 12.3737 s, halo 0.0005 s max/rank)
+ throughput       :     542.1 Mpixel/s (9.22 GFLOP/s, 17 ops/pixel)
+ load balance     :     100.0 %  (avg / max compute time per rank)
+ CPU USAGE        :     99 %  out of 800 %  during the parallel filter phase
+                        99 %  out of 800 %  whole run incl. serial I/O
+ result checksum  : 456994278fda5a34
+
+---------- 2 rank(s)
+ MPI ranks        : 2  = 1-dimensional hypercube (Gray-code strips)
+ filter passes    :    6.2169 s  (compute 6.2067 s, halo 0.0464 s max/rank)
+ throughput       :    1079.5 Mpixel/s (18.35 GFLOP/s, 17 ops/pixel)
+ load balance     :      99.7 %  (avg / max compute time per rank)
+ CPU USAGE        :    200 %  out of 800 %  during the parallel filter phase
+                       197 %  out of 800 %  whole run incl. serial I/O
+ result checksum  : 456994278fda5a34
+
+---------- 4 rank(s)
+ MPI ranks        : 4  = 2-dimensional hypercube (Gray-code strips)
+ filter passes    :    3.1418 s  (compute 3.1338 s, halo 0.0460 s max/rank)
+ throughput       :    2136.0 Mpixel/s (36.31 GFLOP/s, 17 ops/pixel)
+ load balance     :      99.1 %  (avg / max compute time per rank)
+ CPU USAGE        :    395 %  out of 800 %  during the parallel filter phase
+                       384 %  out of 800 %  whole run incl. serial I/O
+ result checksum  : 456994278fda5a34
+
+---------- 8 rank(s)
+ MPI ranks        : 8  = 3-dimensional hypercube (Gray-code strips)
+ filter passes    :    1.8447 s  (compute 1.6433 s, halo 0.2267 s max/rank)
+ throughput       :    3638.0 Mpixel/s (61.85 GFLOP/s, 17 ops/pixel)
+ load balance     :      99.1 %  (avg / max compute time per rank)
+ CPU USAGE        :    694 %  out of 800 %  during the parallel filter phase
+                       649 %  out of 800 %  whole run incl. serial I/O
+ result checksum  : 456994278fda5a34
+
+##### sustained run on all 8 cores: 8192 x 8192, 1000 passes
+
+================ SPATIAL FILTER - MPI HYPERCUBE ================
+ input            : smooth (generated)
+ image            : 8192 x 8192 pixels, 3x3 mask, 1000 pass(es)
+ MPI ranks        : 8  = 3-dimensional hypercube (Gray-code strips)
+ logical CPUs     : 8
+----------------------------------------------------------------
+ read/generate    :    0.1329 s  (rank 0, sequential I/O)
+ bcast + scatter  :    0.0149 s  (3 hypercube steps)
+ filter passes    :   17.9564 s  (compute 16.6623 s, halo 1.6108 s max/rank)
+ gather           :    0.0098 s  (3 hypercube steps)
+ parallel total   :   17.9810 s
+ throughput       :    3737.3 Mpixel/s (63.53 GFLOP/s, 17 ops/pixel)
+ load balance     :      98.9 %  (avg / max compute time per rank)
+----------------------------------------------------------------
+ CPU USAGE        :    718 %  out of 800 %  during the parallel filter phase
+                       713 %  out of 800 %  whole run incl. serial I/O
+                    (sum of CPU time of all 8 ranks / wall-clock time,
+                     8 cores x 100% = 800% maximum)
+================================================================
+ result checksum  : f1b5d4bf57baf7fc

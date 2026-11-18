@@ -1,0 +1,103 @@
+### Sample run: JacobiOpenMP, 32x32 grid, 32 threads - matches the C* result exactly
+### command: ./JacobiOpenMP -n 32 -p 32 -t 0.01 -L
+
+=======================================================
+ PARALLEL JACOBI RELAXATION on real hardware (OpenMP)
+=======================================================
+ Threads P            = 32
+ Grid (interior)      = 32 x 32  (0.0 M points)
+ Rows per thread      = 1.0
+ Convergence tolerance= 0.01   (tested every 1 sweep)
+ Synchronisation      = tree   (dissemination, 5 rounds, lock free)
+ Barriers per sweep   = 1
+ Load balancing       = adaptive (rows proportional to measured core speed)
+
+ CONVERGED
+ Sweeps               = 642
+ Final max change     = 0.00999199
+ Solution checksum    = 24632.02483
+ Centre value         = 24.069276
+   the exact steady state centre value is 25, so this is the
+   physically correct answer to the tolerance requested
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Wall clock time               = 0.0010 s
+ Time per sweep                = 0.0016 ms
+ Point updates per second      = 0.639 G/s
+ Arithmetic rate               = 5.111 GFLOP/s
+ Memory traffic (>= )          = 10.223 GB/s
+ Barriers executed             = 642
+=======================================================
+
+### Sample run: 1024x1024 grid, 24 threads, adaptive balancing
+### command: ./JacobiOpenMP -n 1024 -p 24 -i 400 -r 3 -L
+
+=======================================================
+ PARALLEL JACOBI RELAXATION on real hardware (OpenMP)
+=======================================================
+ Threads P            = 24
+ Grid (interior)      = 1024 x 1024  (1.0 M points)
+ Rows per thread      = 42.7
+ Convergence tolerance= 0.01   (tested every 1 sweep)
+ Synchronisation      = tree   (dissemination, 5 rounds, lock free)
+ Barriers per sweep   = 1
+ Load balancing       = adaptive (rows proportional to measured core speed)
+
+ SWEEP LIMIT REACHED
+ Sweeps               = 400
+ Final max change     = 0.0604986
+ Solution checksum    = 1093699.232
+ Centre value         = 0.000000
+   NOTE: on a grid this large the max-change test halts long
+   before the plate reaches its global steady state, so the
+   centre has not warmed up yet.  That is a property of the
+   stopping rule, not an error: raise -n gently or tighten -t
+   to follow the solution further.
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Wall clock time               = 0.0133 s
+ Time per sweep                = 0.0333 ms
+ Point updates per second      = 31.515 G/s
+ Arithmetic rate               = 252.121 GFLOP/s
+ Memory traffic (>= )          = 504.242 GB/s
+ Barriers executed             = 400
+=======================================================
+
+### Sample run: 8192x8192 grid (67.1M points), all 32 threads
+### command: ./JacobiOpenMP -n 8192 -p 32 -i 50 -L
+
+=======================================================
+ PARALLEL JACOBI RELAXATION on real hardware (OpenMP)
+=======================================================
+ Threads P            = 32
+ Grid (interior)      = 8192 x 8192  (67.1 M points)
+ Rows per thread      = 256.0
+ Convergence tolerance= 0.01   (tested every 1 sweep)
+ Synchronisation      = tree   (dissemination, 5 rounds, lock free)
+ Barriers per sweep   = 1
+ Load balancing       = adaptive (rows proportional to measured core speed)
+
+ SWEEP LIMIT REACHED
+ Sweeps               = 50
+ Final max change     = 0.484743
+ Solution checksum    = 2881744.297
+ Centre value         = 0.000000
+   NOTE: on a grid this large the max-change test halts long
+   before the plate reaches its global steady state, so the
+   centre has not warmed up yet.  That is a property of the
+   stopping rule, not an error: raise -n gently or tighten -t
+   to follow the solution further.
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Wall clock time               = 2.2543 s
+ Time per sweep                = 45.0867 ms
+ Point updates per second      = 1.488 G/s
+ Arithmetic rate               = 11.908 GFLOP/s
+ Memory traffic (>= )          = 23.815 GB/s
+ Barriers executed             = 50
+=======================================================
+
+### Barrier + aggregation cost, all three implementations at 32 threads
+barrier+aggregate cost: P=32  mode=tree       601.3 ns/op  (5 rounds)
+barrier+aggregate cost: P=32  mode=linear   24032.7 ns/op  (5 rounds)
+barrier+aggregate cost: P=32  mode=omp      20592.4 ns/op  (5 rounds)

@@ -1,0 +1,59 @@
+Running 13 simulator configurations on up to 32 host cores ...
+  done: nai P=1
+  done: eff P=1
+  done: eff P=2
+  done: nai P=4
+  done: nai P=8
+  done: eff P=16
+  done: nai P=16
+  done: nai P=32
+  done: seq P=seq
+  done: eff P=32
+  done: eff P=4
+  done: eff P=8
+  done: nai P=2
+
+===========================================================================
+  PROJECT 5 - PARALLEL JACOBI RELAXATION: PERFORMANCE SUMMARY
+===========================================================================
+  Problem : 32 x 32 interior grid, top edge 100 deg, other edges 0 deg
+  Stopping: max change per sweep < 0.01  (convergence test)
+  Machine : C* simulated shared-memory multiprocessor
+  Baseline: JacobiSequential.c  T(1) = 75050137  (642 sweeps, checksum 24632.0)
+===========================================================================
+
+  EFFICIENT VERSION - butterfly barrier + butterfly aggregation
+  P    T(P)           Speedup   Efficiency  Sweeps   Util%   Checksum
+  -------------------------------------------------------------------------
+  1    75101538       1.00      0.999       642      0       24632.0
+  2    37806988       1.99      0.993       642      50      24632.0
+  4    19158622       3.92      0.979       642      74      24632.0
+  8    9829431        7.64      0.954       642      87      24632.0
+  16   5183528        14.48     0.905       642      92      24632.0
+  32   2900738        25.87     0.809       642      93      24632.0
+
+  NAIVE CONTROL - linear counter barrier + locked maximum + copy-back
+  P    T(P)           Speedup   Efficiency  Sweeps   Util%   Checksum
+  -------------------------------------------------------------------------
+  1    82181890       0.91      0.913       642      0       24632.0
+  2    41337120       1.82      0.908       642      50      24632.0
+  4    20887150       3.59      0.898       642      74      24632.0
+  8    10656240       7.04      0.880       642      86      24632.0
+  16   5675208        13.22     0.827       642      90      24632.0
+  32   3454692        21.72     0.679       642      85      24632.0
+
+  BENEFIT OF THE EFFICIENT BARRIER AND AGGREGATION
+  P    T(P) efficient T(P) naive     Naive/Eff    Time saved
+  -------------------------------------------------------------------------
+  1    75101538       82181890       1.094        8.6%
+  2    37806988       41337120       1.093        8.5%
+  4    19158622       20887150       1.090        8.3%
+  8    9829431        10656240       1.084        7.8%
+  16   5183528        5675208        1.095        8.7%
+  32   2900738        3454692        1.191        16.0%
+
+===========================================================================
+  All versions converge in the same number of sweeps to the same checksum,
+  which confirms the parallel programs compute exactly the same solution
+  as the sequential reference.
+===========================================================================

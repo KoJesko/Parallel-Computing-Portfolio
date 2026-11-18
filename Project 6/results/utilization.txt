@@ -1,0 +1,65 @@
+### CPU + GPU utilization during one run
+### command: ./cpu_mesh 32 40000000000 &   ./cuda_mesh 10000000000 32 200 &
+
+### Timeline (whole machine, 1 s samples)
+  t (s)  CPU busy (all 32 CPUs) GPU utilization
+  1      99.9 %                 100 %
+  2      100.0 %                100 %
+  3      100.0 %                100 %
+  4      99.9 %                 99 %
+  5      100.0 %                100 %
+  6      100.0 %                100 %
+  7      99.9 %                 99 %
+  8      100.0 %                100 %
+
+### command: top -b -n 2 -d 1 -o %CPU   (100% = one logical CPU)
+top - 12:05:51 up 40 min,  1 user,  load average: 11.73, 7.06, 4.28
+Tasks: 579 total, 3 running, 576 sleep, 0 d-sleep, 0 stopped, 0 zombie
+%Cpu(s): 99.4 us,  0.2 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.4 hi,  0.0 si,  0.0 st 
+MiB Mem :  15701.1 total,   4206.7 free,   6432.8 used,   6752.8 buff/cache     
+MiB Swap:  35701.0 total,  31875.2 free,   3825.8 used.   9268.2 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 133548 kojesko   16  -4  268904   2944   2524 S  3128   0.0   6:32.84 cpu_mesh
+ 133549 kojesko   16  -4 5227196 181636 167748 R  50.0   1.1   0:06.26 cuda_mesh
+   1692 kojesko   -2 -12 3472604 218776 156300 S   3.9   1.4   3:10.20 kwin_wayland
+    956 root      20   0  306980   6772   3604 S   2.0   0.0   0:09.17 nvidia-powerd
+   4320 kojesko   16  -4 3319904 159460  55156 S   1.0   1.0   0:54.07 Isolated Web Co
+  40275 kojesko   16  -4 5738404 345392  77392 S   1.0   2.1   0:45.67 claude
+ 133769 kojesko   16  -4   13176   6796   4576 R   1.0   0.0   0:00.02 top
+
+### command: nvidia-smi   (sampled at the same moment)
+Wed Oct 28 12:05:51 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 615.71.09              KMD Version: 615.71.09     CUDA UMD Version: 13.4     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4060 ...    Off |   00000000:01:00.0 Off |                  N/A |
+| N/A   78C    P0             54W /  134W |     145MiB /   8188MiB |    100%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1692    C+G   ...o/.cache/nx-kwin/kwin_wayland          7MiB |
+|    0   N/A  N/A          133549      C   ./cuda_mesh                              96MiB |
+
+### Program output
+  CPU mesh 4 x 8 (32 threads, dynamic), n = 40000000000 intervals
+    result   = 3.141592652738
+    error    = 8.523e-10
+    time     = 3.045642 s (best of 5)
+    reduce   = 0.42 us, 6 neighbour steps
+  CUDA mesh on NVIDIA GeForce RTX 4060 Laptop GPU (24 SMs)
+    grid     = 32 x 32 blocks of 32 x 8 threads (262144 threads)
+    n        = 10000000000 intervals (38147 per thread)
+    result   = 3.141592647814
+    error    = 5.776e-09
+    time     = 0.080991 s (best of 200, kernels only)
+    rate     = 123.47 G evaluations/s

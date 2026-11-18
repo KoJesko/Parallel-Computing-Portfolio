@@ -1,0 +1,42 @@
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION ON A 2-D MESH - mesh summation
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Mesh                 =    2 x    2
+ Processes P          =    4
+ Trapezoids N         = 28800
+ Points per process   = 7200
+ Summation steps      =    2  (row M/2 + column M/2, 1 hop each)
+ Result collected at  = processor    0 (row    0, col    0)
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   317288.000
+ Sequential execution time T(1) =   1238584.00
+ Speedup   T(1)/T(P)            =   3.903
+ Efficiency  speedup/P          =  0.9758
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1268135
+PARALLEL EXECUTION TIME: 317345
+SPEEDUP:    4.00
+NUMBER OF PROCESSORS USED: 4
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+     1           99               99
+     2           99               99
+     3           99               99
+
+*TERMINATE C* SYSTEM
+

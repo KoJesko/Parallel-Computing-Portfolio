@@ -1,0 +1,80 @@
+===========================================================================
+  PROJECT 5 - PARALLEL JACOBI RELAXATION: REAL HARDWARE SUMMARY
+===========================================================================
+  CPU        : Intel(R) Core(TM) i9-14900HX
+  Cores      : 32 hardware threads
+  Core types : 16 x 4100 MHz  2 x 5800 MHz  6 x 5600 MHz  
+  Compiler   : gcc (GCC) 16.2.1 20260810
+  Placement  : one thread per physical core, fastest first
+  Power      : on AC   governor=powersave   profile=performance
+===========================================================================
+
+  1. CORRECTNESS - the solution must not depend on how it is computed
+  -----------------------------------------------------------------------
+  P      sync       bal    sweeps    checksum           centre
+  -----------------------------------------------------------------------
+  1      tree       -      2419      623412.6429        0.023235
+  1      tree       -L     2419      623412.6429        0.023235
+  8      tree       -      2419      623412.6429        0.023235
+  8      tree       -L     2419      623412.6429        0.023235
+  32     tree       -      2419      623412.6429        0.023235
+  32     tree       -L     2419      623412.6429        0.023235
+  1      linear     -      2419      623412.6429        0.023235
+  1      linear     -L     2419      623412.6429        0.023235
+  8      linear     -      2419      623412.6429        0.023235
+  8      linear     -L     2419      623412.6429        0.023235
+  32     linear     -      2419      623412.6429        0.023235
+  32     linear     -L     2419      623412.6429        0.023235
+  1      omp        -      2419      623412.6429        0.023235
+  1      omp        -L     2419      623412.6429        0.023235
+  8      omp        -      2419      623412.6429        0.023235
+  8      omp        -L     2419      623412.6429        0.023235
+  32     omp        -      2419      623412.6429        0.023235
+  32     omp        -L     2419      623412.6429        0.023235
+  -----------------------------------------------------------------------
+  Reference checksum: 623412.6429   (identical everywhere = the parallel
+  program computes exactly what the sequential one computes)
+
+  2. STRONG SCALING - 1024x1024 grid, 400 sweeps, convergence tested every sweep
+  -----------------------------------------------------------------------
+  P      static s   Gpt/s     spd     adaptive s Gpt/s     spd     gain
+  -----------------------------------------------------------------------
+  1      0.1321     3.18      1.00    0.1292     3.25      1.02    +2%
+  2      0.0736     5.70      1.79    0.0768     5.46      1.72    -4%
+  4      0.0397     10.55     3.32    0.0446     9.41      2.96    -12%
+  8      0.0195     21.53     6.78    0.0210     19.97     6.29    -8%
+  16     0.0301     13.95     4.39    0.0143     29.23     9.20    +52%
+  24     0.0195     21.47     6.76    0.0136     30.92     9.74    +31%
+  32     0.0330     12.72     4.01    0.0198     21.14     6.66    +40%
+  -----------------------------------------------------------------------
+  spd = speedup against the 1-thread run.  'gain' is what the adaptive
+  partition adds; it is large exactly where the slow E-cores would
+  otherwise hold back every sweep.
+
+  3. LARGE GRIDS - adaptive, all cores, 50 sweeps
+  -----------------------------------------------------------------------
+  N        points       time s     Gpt/s        GFLOP/s      GB/s touched
+  -----------------------------------------------------------------------
+  2048     4.2M         0.0938     2.23         17.88        35.76
+  4096     16.8M        0.5797     1.45         11.58        23.15
+  8192     67.1M        2.2593     1.49         11.88        23.76
+  -----------------------------------------------------------------------
+
+  4. COST OF ONE BARRIER + GLOBAL MAXIMUM  (nanoseconds per operation)
+  -----------------------------------------------------------------------
+  P      efficient      naive          OpenMP         naive/eff  omp/eff
+         (log P, free)  (O(P), locked) (omp barrier)             
+  -----------------------------------------------------------------------
+  2      61             136            2817           2.2x       46.2x
+  4      142            1087           3645           7.7x       25.8x
+  8      211            2703           4597           12.8x      21.8x
+  16     287            6753           9722           23.5x      33.9x
+  24     430            13187          13901          30.6x      32.3x
+  32     480            17666          19651          36.8x      40.9x
+  -----------------------------------------------------------------------
+
+===========================================================================
+  Peak throughput and the best thread count are reported above.  On this
+  hybrid CPU the fastest configuration is NOT always all 32 threads: the
+  last 8 are SMT siblings of cores that are already busy.
+===========================================================================

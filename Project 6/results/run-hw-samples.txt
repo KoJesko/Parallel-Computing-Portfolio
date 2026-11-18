@@ -1,0 +1,25 @@
+### Sample runs on real hardware (n = 1e9)
+
+$ mpirun --map-by core --bind-to core -np 16 ./mesh_integrate 1000000000
+Mesh 4 x 4 (16 procs), n = 1000000000 intervals
+  result   = 3.141592652738
+  error    = 8.523e-10
+  compute  = 0.115452 s
+  total    = 0.115459 s
+  reduce   = 4 neighbour steps (vs 15 for naive gather)
+
+$ ./cpu_mesh 24
+CPU mesh 4 x 6 (24 threads, dynamic), n = 1000000000 intervals
+  result   = 3.141592652738
+  error    = 8.523e-10
+  time     = 0.065457 s (best of 5)
+  reduce   = 0.75 us, 5 neighbour steps
+
+$ ./cuda_mesh
+CUDA mesh on NVIDIA GeForce RTX 4060 Laptop GPU (24 SMs)
+  grid     = 32 x 32 blocks of 32 x 8 threads (262144 threads)
+  n        = 1000000000 intervals (3815 per thread)
+  result   = 3.141592653762
+  error    = 1.719e-10
+  time     = 0.010221 s (best of 10, kernels only)
+  rate     = 97.84 G evaluations/s

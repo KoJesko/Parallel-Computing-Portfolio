@@ -1,0 +1,12 @@
+    1 ARCHITECTURE HYPERCUBE(10);
+    2 #include <mpi.h>
+    3 int myrank, totalproc; 
+    4 
+    5 main( ) {
+    6   MPI_Init( );
+    7   MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+    8   MPI_Comm_size(MPI_COMM_WORLD, &totalproc);
+    9   cout << "Hello World from process" << myrank
+   10        << " out of " << totalproc << endl;
+   11   MPI_Finalize( );
+   12 }

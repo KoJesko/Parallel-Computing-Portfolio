@@ -1,0 +1,159 @@
+    1 /* PROGRAM MeshIntegrate                                                   */
+    2 /*                                                                          */
+    3 /*  Project 6 - Numerical integration on a 2-D mesh multicomputer.          */
+    4 /*  Conversion of the numerical integration program of Figure 5.8.          */
+    5 /*                                                                          */
+    6 /*  Computes  integral from a = 0 to b = 2 of sqrt(4 - t*t) dt  =  pi       */
+    7 /*  with the trapezoidal rule, using P = M x M processes, one per           */
+    8 /*  processor of an M x M mesh (process i runs on processor i, which is     */
+    9 /*  row i / M, column i % M).                                               */
+   10 /*                                                                          */
+   11 /*  WHAT CHANGED FROM FIGURE 5.8                                            */
+   12 /*  Figure 5.8 adds each local sum into a shared variable inside a lock.    */
+   13 /*  A multicomputer has no shared memory, and funnelling all P sums into    */
+   14 /*  one node costs P - 1 sequential receives at that node, with messages    */
+   15 /*  crossing up to 2(M - 1) links.                                          */
+   16 /*                                                                          */
+   17 /*  MESH SUMMATION (every message goes to a direct mesh neighbour)          */
+   18 /*   1. Row phase: in each row the left half passes a running sum to the    */
+   19 /*      right and the right half passes one to the left.  Both halves run   */
+   20 /*      at the same time and meet at the middle column after M/2 steps.     */
+   21 /*   2. Column phase: the middle column does the same vertically, so the    */
+   22 /*      grand total arrives at the centre processor after M/2 more steps.   */
+   23 /*  That is M = sqrt(P) steps in total, every message is one hop, and no    */
+   24 /*  node receives more than 3 messages.  A gather to processor 0 needs      */
+   25 /*  P - 1 receives there.                                                   */
+   26 /*                                                                          */
+   27 /*  The centre processor adds the endpoint correction and prints the        */
+   28 /*  answer and the performance summary.                                     */
+   29 
+   30 ARCHITECTURE MESH2(4);
+   31 
+   32 #include <math.h>
+   33 
+   34 #define M        4          /* mesh is M x M; must match MESH2(M) above    */
+   35 #define P        16         /* number of processes = M * M                 */
+   36 #define N        28800      /* total number of trapezoids (all processes)  */
+   37 #define SEQTIMEK 1238.584   /* T(1) / 1000 from IntegrateSequential.c     */
+   38 
+   39 float stream fromleft[P];   /* value arriving from the west neighbour      */
+   40 float stream fromright[P];  /* value arriving from the east neighbour      */
+   41 float stream fromup[P];     /* value arriving from the north neighbour     */
+   42 float stream fromdown[P];   /* value arriving from the south neighbour     */
+   43 int i;
+   44 
+   45 float f(float t) {
+   46   return( sqrt(4 - t*t) );
+   47 }
+   48 
+   49 void Integrate(int me) {
+   50   float a, b, w, t, localsum, rowsum, total, inval, err;
+   51   int row, col, mid, numpoints, j;
+   52 
+   53   a = 0.0;
+   54   b = 2.0;
+   55   w = (b - a) / N;
+   56   numpoints = N / P;
+   57   row = me / M;
+   58   col = me % M;
+   59   mid = (M - 1) / 2;
+   60 
+   61   /* ---- local computation: identical to Figure 5.8 ------------------- */
+   62   localsum = 0.0;
+   63   t = a + me * numpoints * w;
+   64   for (j = 1; j <= numpoints; j++) {
+   65     localsum = localsum + f(t);
+   66     t = t + w;
+   67   }
+   68   localsum = w * localsum;
+   69 
+   70   /* ---- row phase: both halves of the row converge on column mid ----- */
+   71   rowsum = localsum;
+   72   if (col < mid) {
+   73     if (col > 0) {
+   74       recv(fromleft[me], inval);
+   75       rowsum = rowsum + inval;
+   76     }
+   77     send(fromleft[me + 1], rowsum);
+   78   }
+   79   if (col > mid) {
+   80     if (col < M - 1) {
+   81       recv(fromright[me], inval);
+   82       rowsum = rowsum + inval;
+   83     }
+   84     send(fromright[me - 1], rowsum);
+   85   }
+   86   if (col == mid) {
+   87     if (col > 0) {
+   88       recv(fromleft[me], inval);
+   89       rowsum = rowsum + inval;
+   90     }
+   91     if (col < M - 1) {
+   92       recv(fromright[me], inval);
+   93       rowsum = rowsum + inval;
+   94     }
+   95 
+   96     /* ---- column phase: the middle column converges on row mid ------- */
+   97     total = rowsum;
+   98     if (row < mid) {
+   99       if (row > 0) {
+  100         recv(fromup[me], inval);
+  101         total = total + inval;
+  102       }
+  103       send(fromup[me + M], total);
+  104     }
+  105     if (row > mid) {
+  106       if (row < M - 1) {
+  107         recv(fromdown[me], inval);
+  108         total = total + inval;
+  109       }
+  110       send(fromdown[me - M], total);
+  111     }
+  112     if (row == mid) {
+  113       if (row > 0) {
+  114         recv(fromup[me], inval);
+  115         total = total + inval;
+  116       }
+  117       if (row < M - 1) {
+  118         recv(fromdown[me], inval);
+  119         total = total + inval;
+  120       }
+  121 
+  122       /* ---- centre processor: finish and report ---------------------- */
+  123       total = total + w / 2 * (f(b) - f(a));
+  124       cout << "=======================================================" << endl;
+  125       cout << " NUMERICAL INTEGRATION ON A 2-D MESH - mesh summation" << endl;
+  126       cout << "=======================================================" << endl;
+  127       cout << " f(t) = sqrt(4 - t*t),  a = 0,  b = 2" << endl;
+  128       cout << " Mesh                 = " << M << " x " << M << endl;
+  129       cout << " Processes P          = " << P << endl;
+  130       cout << " Trapezoids N         = " << N << endl;
+  131       cout << " Points per process   = " << numpoints << endl;
+  132       cout << " Summation steps      = " << M / 2 + M / 2
+  133            << "  (row M/2 + column M/2, 1 hop each)" << endl;
+  134       cout << " Result collected at  = processor " << me
+  135            << " (row " << row << ", col " << col << ")" << endl;
+  136       cout.precision(12);
+  137       cout << endl << " Integral             = " << total << endl;
+  138       cout << " pi                   = " << 3.14159265358979 << endl;
+  139       err = total - 3.14159265358979;
+  140       if (err < 0) err = -err;
+  141       cout << " Absolute error       = " << err << endl;
+  142       cout << endl << "----------------- PERFORMANCE SUMMARY -----------------" << endl;
+  143       cout.precision(9);
+  144       cout << " Parallel execution time   T(P) = " << clock << endl;
+  145       if (SEQTIMEK > 0) {
+  146         cout << " Sequential execution time T(1) = " << SEQTIMEK * 1000 << endl;
+  147         cout.precision(4);
+  148         cout << " Speedup   T(1)/T(P)            = " << SEQTIMEK * 1000 / clock << endl;
+  149         cout << " Efficiency  speedup/P          = " << SEQTIMEK * 1000 / clock / P << endl;
+  150       }
+  151       cout << "=======================================================" << endl;
+  152     }
+  153   }
+  154 }
+  155 
+  156 main() {
+  157   forall i = 0 to P-1 @ i do
+  158     Integrate(i);
+  159 }

@@ -1,0 +1,57 @@
+### Sample run: MeshIntegrate.c (C* simulator, 4 x 4 mesh, mesh summation)
+### command: ./runcstar.sh MeshIntegrate.c UTILIZATION 0:15
+
+
+Program Successfully Compiled
+
+To View a Complete Program Listing, See File LISTFILE.TXT
+
+*=======================================================
+ NUMERICAL INTEGRATION ON A 2-D MESH - mesh summation
+=======================================================
+ f(t) = sqrt(4 - t*t),  a = 0,  b = 2
+ Mesh                 =    4 x    4
+ Processes P          =   16
+ Trapezoids N         = 28800
+ Points per process   = 1800
+ Summation steps      =    4  (row M/2 + column M/2, 1 hop each)
+ Result collected at  = processor    5 (row    1, col    1)
+
+ Integral             =   3.14159241298
+ pi                   =   3.14159265359
+ Absolute error       =  0.000000240609
+
+----------------- PERFORMANCE SUMMARY -----------------
+ Parallel execution time   T(P) =   79936.0000
+ Sequential execution time T(1) =   1238584.00
+ Speedup   T(1)/T(P)            =   15.49
+ Efficiency  speedup/P          =  0.9680
+=======================================================
+
+
+SEQUENTIAL EXECUTION TIME: 1270089
+PARALLEL EXECUTION TIME: 80013
+SPEEDUP:   15.87
+NUMBER OF PROCESSORS USED: 16
+
+*                  PERCENT UTILIZATION
+PROCESSOR    SINCE START    SINCE LAST BREAK
+     0           99               99
+     1           99               99
+     2           99               99
+     3           99               99
+     4           99               99
+     5           99               99
+     6           99               99
+     7           99               99
+     8           99               99
+     9           99               99
+    10           99               99
+    11           99               99
+    12           99               99
+    13           99               99
+    14           99               99
+    15           99               99
+
+*TERMINATE C* SYSTEM
+
