@@ -9,7 +9,7 @@ Every parallel program is checked against a sequential reference, and most have 
 | | Project | Architecture | Result |
 |:-:|---|---|---|
 | 7 | [Cannon's matrix multiply](Project%207/) | 2-D torus · pthreads + AVX2 · CUDA | **208× on 256 processors** (81% efficiency), and up to 73× faster than the naive gather. 633 GFLOP/s on the CPU, **8.4 TFLOP/s on the GPU** (82–100% of cuBLAS) |
-| 8 | [Image filtering on a hypercube](Project%208/) | 7-D hypercube (128 nodes) · MS-MPI · CUDA | Filter phase scales **128× on 128 nodes** thanks to a Gray-code strip layout where every halo exchange is one hop. CUDA is ~21× faster than 8 MPI cores |
+| 8 | [Image filtering on a hypercube](Project%208/Project8/) | 7-D hypercube (128 nodes) · MS-MPI · CUDA | Filter phase scales **128× on 128 nodes** thanks to a Gray-code strip layout where every halo exchange is one hop. CUDA is ~21× faster than 8 MPI cores |
 | 6 | [Numerical integration on a mesh](Project%206/) | 2-D mesh · MPI · pthreads · CUDA | **107× on 144 processors**. Summing toward the centre of the mesh beats the naive gather by 23% |
 | 5 | [Jacobi relaxation](Project%205/) | Shared memory · OpenMP | A hand-written O(log P) butterfly barrier costs 480 ns at 32 threads, **36.8× cheaper than a locked barrier** and 41× cheaper than OpenMP's. Peaks at 30.9 billion point updates/s |
 
@@ -24,7 +24,7 @@ Every parallel program is checked against a sequential reference, and most have 
 | [5](Project%205/) | Jacobi relaxation | Butterfly barrier with the max-reduction fused in, ping-pong grids, and an OpenMP port with dissemination barriers and adaptive load balancing for P-cores vs E-cores |
 | [6](Project%206/) | Trapezoidal integration of π | Neighbour-only summation on the mesh (O(√P) steps instead of O(P)), plus MPI `Cart_create`, pinned pthreads and CUDA versions |
 | [7](Project%207/) | Matrix multiply | Cannon's algorithm with whole-block messages and computation overlapped with communication, compared against mesh and no-overlap variants. AVX2 CPU kernel and a CUDA torus of thread blocks |
-| [8](Project%208/) | Spatial image filter | Binomial-tree broadcast, Gray-code layout and a two-phase halo exchange on a simulated 7-D hypercube. Real MPI from 1 to 128 ranks, and CUDA |
+| [8](Project%208/Project8/) | Spatial image filter | Binomial-tree broadcast, Gray-code layout and a two-phase halo exchange on a simulated 7-D hypercube. Real MPI from 1 to 128 ranks, and CUDA |
 
 Projects 5–8 each have their own detailed write-up covering the algorithm, efficiency analysis, full results tables and screen captures. Projects 3 and 4 have a `PerformanceSummary.txt`.
 
@@ -32,7 +32,7 @@ Projects 5–8 each have their own detailed write-up covering the algorithm, eff
 
 ## Running things
 
-**C\* simulator programs** need Lester's C\* Compiler and Parallel Computer Simulation System (v2.2), which isn't covered by this repo's license. On Linux it runs under Wine. Projects 5–7 include a `runcstar.sh` that drives the interactive simulator non-interactively, so runs can be scripted and benchmarked:
+**C\* simulator programs** need Lester's C\* Compiler and Parallel Computer Simulation System (v2.2). Its license doesn't allow redistribution, so it isn't in this repo; use the copy that comes with the textbook. Put `cstar.exe` in `parallel/` (it's gitignored there) or set `CSTAR=/path/to/cstar.exe`. On Linux it runs under Wine. Projects 5–7 include a `runcstar.sh` that drives the interactive simulator non-interactively, so runs can be scripted and benchmarked:
 
 ```sh
 cd "Project 7"
@@ -46,7 +46,7 @@ cd "Project 6"
 make && make bench
 ```
 
-Project 8 targets Windows (MSVC, MS-MPI, CUDA). See its `build.bat` and `run_*.bat`.
+Project 8 targets Windows (MSVC, MS-MPI, CUDA). See `Project 8/Project8/build.bat` and the `run_*.bat` scripts; `run_simulator.bat` expects `cstar.exe` in the same folder.
 
 ## Things these projects cover
 

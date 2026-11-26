@@ -1,0 +1,7 @@
+# Bruce Lester's C* simulator is licensed for personal use only and must not be
+# redistributed. Keep your own copy here locally; never commit it.
+parallel/cstar
+parallel/cstar.exe
+parallel/cstar-m1
+parallel/cstar-mac
+cstar.exe
